@@ -1,5 +1,5 @@
 /*
-fifo fifo_inst
+sc_fifo sc_fifo_inst
 (
 	.clk(),
 	.reset_n(),
@@ -22,7 +22,7 @@ defparam 	fifo_inst.data_width = 32,
 			fifo_inst.fifo_almost_full = 2130,
 			fifo_inst.fifo_almost_empty = 12;
 */
-module fifo
+module sc_fifo
 #
 (
 	parameter data_width = 256,
@@ -83,7 +83,7 @@ always_ff @ (posedge clk)
 	if(rd && ~empty)	data_out <= ram[rd_ptr];	
 
 //----------------------------------------------------------------------------
-//control signal
+//status signal
 always_ff @ (posedge clk or negedge reset_n)
 	if(!reset_n)	full <= 1'b0;
 	else 	if(full)	full <= &cnt_word & rd ? 1'b0 : 1'b1;
