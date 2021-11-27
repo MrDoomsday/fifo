@@ -17,18 +17,18 @@ sc_fifo sc_fifo_inst
 	
 );
 
-defparam 	fifo_inst.data_width = 32,
-			fifo_inst.fifo_depth = 10,
-			fifo_inst.fifo_almost_full = 2130,
-			fifo_inst.fifo_almost_empty = 12;
+defparam 	sc_fifo_inst.data_width = 32,
+			sc_fifo_inst.fifo_depth = 10,
+			sc_fifo_inst.fifo_almost_full = 2130,
+			sc_fifo_inst.fifo_almost_empty = 12;
 */
 module sc_fifo
 #
 (
 	parameter data_width = 256,
 	parameter fifo_depth = 12,
-	parameter fifo_almost_full = 900,
-	parameter fifo_almost_empty = 12
+	parameter fifo_almost_full_val = 900,
+	parameter fifo_almost_empty_val = 12
 )
 (
 	input logic clk,
@@ -97,13 +97,13 @@ always_ff @ (posedge clk or negedge reset_n)
 
 always_ff @ (posedge clk or negedge reset_n)
 	if(!reset_n)	almost_full <= 1'b0;
-	else 	if(almost_full)	almost_full <= (cnt_word == fifo_almost_full) & rd & ~wr ? 1'b0 : 1'b1;
-			else 			almost_full <= (cnt_word == fifo_almost_full-1'b1) & wr & ~rd;
+	else 	if(almost_full)	almost_full <= (cnt_word == fifo_almost_full_val) & rd & ~wr ? 1'b0 : 1'b1;
+	else 			almost_full <= (cnt_word == fifo_almost_full_val-1'b1) & wr & ~rd;
 
 always_ff @ (posedge clk or negedge reset_n)
 	if(!reset_n)	almost_empty <= 1'b1;
-	else 	if(almost_empty)	almost_empty <= (cnt_word == fifo_almost_empty) & wr & ~rd ? 1'b0 : 1'b1;
-			else 				almost_empty <= (cnt_word == fifo_almost_empty + 1'b1) & rd & ~wr;
+	else 	if(almost_empty)	almost_empty <= (cnt_word == fifo_almost_empty_val) & wr & ~rd ? 1'b0 : 1'b1;
+	else 				almost_empty <= (cnt_word == fifo_almost_empty_val + 1'b1) & rd & ~wr;
 	
 
 endmodule 
